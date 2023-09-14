@@ -6,8 +6,12 @@
     </div>
 
     <div class="user-info">
-      <img class="suer-logo" :src="user.avatar" alt="">
-      <div class="dropdown">
+      <router-link v-if="!user.uid" to="/login" class="navbar-login">登录</router-link>
+      <router-link v-if="!user.uid" to="/register" class="navbar-register">注册</router-link>
+      <img class="user-logo" :src="user.avatar" alt="用户头像" @mouseenter="showCard" @mouseleave="hideCard">
+
+
+      <div class="dropdown" ref="infoCard">
         <div class="uid">
           uid：<div>{{user.uid}}</div>
         </div>
@@ -42,6 +46,7 @@
         </div>
 
       </div>
+
     </div>
   </div>
 </template>
@@ -58,12 +63,21 @@
 }
 .user-info {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  //flex-direction: column;
+  //align-items: flex-end;
   height: 100%;
   margin-right: 1rem;
+  align-items: center;
 }
-.suer-logo{
+.navbar-login{
+  color: black;
+  margin-right: 10px;
+}
+.navbar-register{
+  color: black;
+  margin-right: 10px;
+}
+.user-logo{
   height: 2rem;
   width: 2rem;
   border-radius: 100%;
@@ -73,11 +87,7 @@
   margin-left: 1rem;
 }
 
-.user-info:hover .dropdown{
-  display: flex;
-  opacity: 1;
-  transition-delay: 0.3s;
-}
+
 
 .dropdown{
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
@@ -86,13 +96,13 @@
   flex-direction: column;
   align-items: center;
   background: white;
-  position: absolute;
+  position: fixed;
+  top: 20px;
+  right: 20px;
   overflow: hidden;
   border-radius: 5px;
   margin-top: 2.2rem;
   z-index: 1;
-  opacity: 0;
-  transition: 0.5s ease-in-out;
 }
 .user-detail{
   display: flex;
@@ -140,17 +150,31 @@
 
 </style>
 <script>
+import {ref} from "vue";
+
+const infoCard = ref(null);
+const showCard = ref(false);
 export default {
   setup(){
     const user = JSON.parse(localStorage.getItem('user') || '{}')
     user.avatar = 'https://avatars.githubusercontent.com/u/112569765?…00&u=5821d799b19c6471af785b40e1c71ba8fe48ca9e&v=4'
     return{
-      user
+      user,
+      infoCard
     }
   },
   methods:{
     logout(){
       localStorage.removeItem('user')
+    },
+    showCard(){
+      infoCard.value.style.display = 'flex'
+
+    },
+    hideCard(){
+      setTimeout(() => {
+        infoCard.value.style.display = 'none'
+      }, 1000)
     }
   }
 }

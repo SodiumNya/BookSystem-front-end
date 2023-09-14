@@ -138,16 +138,6 @@ export default {
         username: '',
         password: '',
       },
-      user:{
-        nickname: '',
-        password: '',
-        role: '',
-        token: '',
-        uid: '',
-        username: '',
-        avatar: 'https://avatars.githubusercontent.com/u/112569765?…00&u=5821d799b19c6471af785b40e1c71ba8fe48ca9e&v=4',
-      },
-
       usernameErr: ref(false),
       passwordErr: ref(false),
       captchaErr: ref(false)
@@ -166,12 +156,12 @@ export default {
       if(this.invalid()){
         return
       }
-
       request.post('/login', {
           username: this.verifyUser.username,
           password: this.verifyUser.password
       }).then(res =>{
         if(res.code ===  200){
+          res.data.avatar = 'https://avatars.githubusercontent.com/u/112569765?…00&u=5821d799b19c6471af785b40e1c71ba8fe48ca9e&v=4'
           localStorage.setItem('user',JSON.stringify(res.data))
           this.$router.push('/')
         }

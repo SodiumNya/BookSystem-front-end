@@ -4,7 +4,7 @@
       <router-link to="/" class="sidebar-label">系统首页</router-link>
       <router-link to="/bookList" class="sidebar-label">我的书架</router-link>
       <router-link to="#" class="sidebar-label">找书看</router-link>
-      <div v-if="user.role === '管理员'" class="sidebar-label">我的书架</div>
+<!--      <div v-if="user.role === '管理员'" class="sidebar-label">我的书架</div>-->
     </div>
   </div>
 </template>

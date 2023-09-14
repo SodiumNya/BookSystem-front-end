@@ -1,31 +1,34 @@
 <template>
   <div class="profile-container">
     <div class="profile-content">
-      <h3 class="profile-title">修改基本信息</h3>
+      <h2 class="profile-title">修改基本信息</h2>
       <div class="public-profile">
         <div class="profile-detail">
           <label for="nickname">昵称</label>
-          <input id="nickname" type="text" :placeholder="user.nickname">
+          <input id="nickname" type="text" v-model="data.nickname">
+
+          <label for="username" >uid</label>
+          <input id="username" type="text" disabled :placeholder="user.uid">
 
           <label for="username" >用户名</label>
-          <input id="username" type="text" disabled :placeholder="user.username">
+          <input id="username" type="text" v-model="data.username" disabled >
 
           <label for="password">密码</label>
-          <input id="password" type="text" disabled :placeholder="user.password">
+          <input id="password" type="text" disabled v-model="data.password">
 
           <label for="describe">个人简介</label>
-          <textarea id="describe" rows="4" :placeholder="user.describe"></textarea>
+          <textarea id="describe" rows="4" v-model="data.describe" ></textarea>
 
-          <button class="profile-save">保存修改</button>
+          <button class="profile-save" @click="saveBasicInfo">保存修改</button>
 
         </div>
 
 
         <div class="profile-avatar">
-          <img src="https://avatars.githubusercontent.com/u/112569765?…00&u=5821d799b19c6471af785b40e1c71ba8fe48ca9e&v=4" alt="头像" class="profile-avatar-picture">
-          <label class="avatar-upload">
+          <img :src="user.avatar" alt="头像" class="profile-avatar-picture">
+          <label class="avatar-upload" >
             上传头像
-            <input id="avatar-upload" type="file">
+            <input id="avatar-upload" type="file" ref="avatarUpload" @change="handleAvatarChange">
           </label>
         </div>
 
@@ -34,14 +37,14 @@
     </div>
 
     <div class="profile-content">
-      <h3 class="profile-title">修改重要信息</h3>
+      <h2 class="profile-title">修改重要信息</h2>
       <div class="public-profile">
         <div class="profile-detail">
           <label for="username" >用户名</label>
-          <input id="username" type="text" :placeholder="user.username">
+          <input id="username" type="text" v-model="data.username">
 
           <label for="password">密码</label>
-          <input id="password" type="text" :placeholder="user.password">
+          <input id="password" type="text" v-model="data.password">
 
           <button class="profile-save" @click="saveCoreInfo">保存修改</button>
         </div>
@@ -72,6 +75,8 @@
   padding-left: 5px;
   padding-right: 5px;
   width: 50%;
+  align-items: center;
+
 }
 .profile-detail{
   display: flex;
@@ -147,20 +152,60 @@
 </style>
 
 <script setup>
-  import request from "@/util/request";
+import request from "@/util/request";
+import {useRouter} from "vue-router";
+import {ref} from "vue";
 
+const router = useRouter()
   const user = JSON.parse(localStorage.getItem('user' || '{}'))
-  const saveCoreInfo = ()=>{
-    request.post('#', {
-      nickname: user.nickname,
-      describe: user.describe
+
+  let data = ref({
+    nickname: user.nickname,
+    username: user.username,
+    password: user.password,
+    describe: user.describe,
+    avatar: user.avatar,
+  });
+
+  let uploadAvatar = user.avatar
+  const avatarUpload = ref(null)
+
+  const handleAvatarChange = ()=>{
+    uploadAvatar = avatarUpload.value.files[0]
+    console.log(avatarUpload.value.files[0])
+    console.log(uploadAvatar)
+  }
+
+  const saveCoreInfo = ()=> {
+    request.post('/update/core', {
+      uid: user.uid,
+      username: data.value.username,
+      password: data.value.password
+    }).then(res =>{
+      if(res.code === 200){
+        localStorage.removeItem('user')
+        router.push('/login')
+      }
     })
   }
 
+
   const saveBasicInfo = ()=>{
-    request.post('#', {
-      username: user.username,
-      password: user.password
+    request.post('/update/basic', {
+      uid: user.uid,
+      nickname: data.value.nickname,
+      describe: data.value.describe,
+      avatar: data.value.avatar
+    }).then(res =>{
+      if(res.code === 200){
+        request.post(`/select/${user.uid}`)
+            .then(res =>{
+              if(res.code === 200){
+                localStorage.setItem('user', JSON.stringify(res.data))
+                window.location.reload()
+              }
+            })
+      }
     })
   }
 </script>

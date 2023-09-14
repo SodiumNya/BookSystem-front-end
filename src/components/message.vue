@@ -9,7 +9,6 @@
     </div>
   </Transition>
 </template>
-
 <script>
 import { onMounted, ref } from 'vue'
 
