@@ -11,10 +11,10 @@
           <input id="username" type="text" disabled :placeholder="user.uid">
 
           <label for="username" >用户名</label>
-          <input id="username" type="text" v-model="data.username" disabled >
+          <input id="username" type="text" v-model="user.username" disabled >
 
           <label for="password">密码</label>
-          <input id="password" type="text" disabled v-model="data.password">
+          <input id="password" type="text" disabled v-model="user.password">
 
           <label for="describe">个人简介</label>
           <textarea id="describe" rows="4" v-model="data.describe" ></textarea>
@@ -63,6 +63,7 @@
 .profile-content{
   width: 100%;
   padding-bottom: 3rem;
+  margin-top: 1rem;
 }
 .profile-title{
   margin: 10px;
@@ -177,6 +178,7 @@ const router = useRouter()
   }
 
   const saveCoreInfo = ()=> {
+    if(data.value.username)
     request.post('/update/core', {
       uid: user.uid,
       username: data.value.username,
@@ -191,14 +193,18 @@ const router = useRouter()
 
 
   const saveBasicInfo = ()=>{
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }
     request.post('/update/basic', {
       uid: user.uid,
       nickname: data.value.nickname,
       describe: data.value.describe,
-      avatar: data.value.avatar
-    }).then(res =>{
+    }, config).then(res =>{
       if(res.code === 200){
-        request.post(`/select/${user.uid}`)
+        request.get(`/select/${user.uid}`)
             .then(res =>{
               if(res.code === 200){
                 localStorage.setItem('user', JSON.stringify(res.data))

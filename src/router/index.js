@@ -18,11 +18,17 @@ const routes = [
                 meta: {requireAuth: true}
             },
             {
+                path: 'bookDetail/:bookId',
+                name: 'bookDetail',
+                component: import('@/view/BookDetail.vue')
+            },
+            {
                 path: 'profile',
                 name: 'Profile',
                 component: import("@/view/Profile.vue"),
                 meta: {requireAuth: true}
-            }
+            },
+
         ]
     },
     {

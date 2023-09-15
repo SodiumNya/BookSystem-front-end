@@ -9,36 +9,14 @@
 <style scoped>
 .borrow-book{
   margin: 30px 20px 10px;
+  border-bottom: 1px solid #c0c0c4;
+
 }
 </style>
 
 <script setup>
 
 import BookList from "@/components/BookList.vue";
-const bookData = [
-  [
-    {
-      BookName: '三体(全集)',
-      Author: '刘慈欣',
-      src: "https://cdn.weread.qq.com/weread/cover/80/yuewen_695233/t6_yuewen_6952331677562148.jpg"
-    },
-    {
-      BookName: '三体(全集)',
-      Author: '刘慈欣',
-      src: "https://cdn.weread.qq.com/weread/cover/80/yuewen_695233/t6_yuewen_6952331677562148.jpg"
-    },
-  ],
-  [
-    {
-      BookName: '三体(全集)',
-      Author: '刘慈欣',
-      src: "https://cdn.weread.qq.com/weread/cover/80/yuewen_695233/t6_yuewen_6952331677562148.jpg"
-    },
-    {
-      BookName: '三体(全集)',
-      Author: '刘慈欣',
-      src: "https://cdn.weread.qq.com/weread/cover/80/yuewen_695233/t6_yuewen_6952331677562148.jpg"
-    },
-  ],
-]
+import {ref} from "vue";
+let bookData = ref([])
 </script>

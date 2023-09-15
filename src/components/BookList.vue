@@ -2,14 +2,19 @@
   <div class="book-store">
     <div class="book-store-row" v-for="books in bookList">
       <div class="book-store-col" v-for="bookObject in books">
-        <div class="book">
-          <img alt="书籍封面" :src="bookObject.src">
-          <div class="book-detail">
-            <div class="book-title">{{bookObject.BookName}}</div>
-            <div class="book-author-name">{{bookObject.Author}}</div>
+        <router-link :to="`/bookDetail/${bookObject.bookId}`">
+          <div class="book">
+            <img alt="书籍封面" :src="bookObject.bookCover">
+            <div class="book-detail">
+              <div class="book-title">{{bookObject.bookTitle}}</div>
+              <div class="book-author-name" @click="aaa">
+                {{bookObject.bookAuthor}}
+              </div>
+            </div>
           </div>
 
-        </div>
+        </router-link>
+
       </div>
     </div>
   </div>
@@ -52,6 +57,9 @@
   padding: 0 10px 0 5px;
 
 }
+.book-author-name a{
+  color: black;
+}
 .book-detail{
   margin: 5px;
   align-items: center;
@@ -59,10 +67,11 @@
 }
 </style>
 
-<script>
-export default {
-  props: {
-    bookList: Array
-  }
-}
+<script setup>
+
+const props = defineProps({
+  bookList: Array
+})
+
+
 </script>

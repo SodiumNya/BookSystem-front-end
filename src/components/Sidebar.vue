@@ -3,7 +3,7 @@
     <div class="sidebar-content">
       <router-link to="/" class="sidebar-label">系统首页</router-link>
       <router-link to="/bookList" class="sidebar-label">我的书架</router-link>
-      <router-link to="#" class="sidebar-label">找书看</router-link>
+      <router-link to="/profile" class="sidebar-label">个人信息</router-link>
 <!--      <div v-if="user.role === '管理员'" class="sidebar-label">我的书架</div>-->
     </div>
   </div>

@@ -1,9 +1,9 @@
 <template>
   <div class="search-section">
-    <h1>回车，前往书的世界</h1>
+    <h1>回车，找本书看看</h1>
     <div class="search">
-      <input type="text">
-      <span class="search_logo" @click=""></span>
+      <input type="text" v-model="searchData" placeholder="输入/书名/作者名">
+      <span class="search_logo" @click="getBook" @keyup.enter="keyDown"></span>
     </div>
   </div>
   <book-list :book-list="bookData"/>
@@ -11,20 +11,24 @@
 
 <style>
 .search-section{
-   height: 20%;
-   display: flex;
-   flex-direction: column;
-   align-items: center;
- //background: #7f7f7f;
+  height: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 4rem;
+  border-bottom: 10px solid #e0e2e5;
  }
 .search_logo{
   content: "";
   top: 16px;
   left: 20px;
   width: 20px;
-  height: 20px;
+  height: 100%;
   background-size: 100%;
   background: url("https://weread-1258476243.file.myqcloud.com/web/wrwebnjlogic/image/search_magnifier.3aaf44ac.png") no-repeat;
+}
+.search_logo:hover{
+  background: #312f2f url("https://weread-1258476243.file.myqcloud.com/web/wrwebnjlogic/image/search_magnifier.3aaf44ac.png") no-repeat;
 }
 .search{
   display: flex;
@@ -45,17 +49,42 @@
   height: 100%;
   padding: 10px;
   border-radius: 26px;
+  font-size: large;
 }
 
 </style>
 <script setup>
 
 import BookList from "@/components/BookList.vue";
-const bookData = [
-   [{
-     BookName: '三体(全集)',
-     Author: '刘慈欣',
-     src: "https://cdn.weread.qq.com/weread/cover/80/yuewen_695233/t6_yuewen_6952331677562148.jpg"
-   },]
-]
+import request from "@/util/request";
+const searchData = ref('')
+const currentPage = ref('1')
+const pageSize = 25
+const bookData = ref([
+])
+
+const keyDown = (e)=>{
+  if (e.keyCode === 13){
+    getBook()
+  }
+}
+const getBook = ()=>{
+  // alert(searchData.value)
+  request.post(`/select/bookList/${searchData.value}/${currentPage.value}/${pageSize}`)
+      .then(res => {
+        if(res.code === 200){
+          bookData.value = res.data;
+        }else {
+          // bookData.value = null
+        }
+      })
+}
+
+onMounted(()=>{
+  window.addEventListener('keydown', keyDown)
+})
+
+onUnmounted(()=>{
+  window.removeEventListener('keydown', keyDown, false)
+})
 </script>
