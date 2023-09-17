@@ -1,10 +1,14 @@
 <template>
   <div class="sidebar-container">
-    <div class="sidebar-content">
+    <div class="sidebar-content" v-if="user.role === '用户'">
       <router-link to="/" class="sidebar-label">系统首页</router-link>
       <router-link to="/bookList" class="sidebar-label">我的书架</router-link>
       <router-link to="/profile" class="sidebar-label">个人信息</router-link>
-<!--      <div v-if="user.role === '管理员'" class="sidebar-label">我的书架</div>-->
+    </div>
+    <div class="sidebar-content" v-if="user.role === '管理员'">
+      <router-link to="/" class="sidebar-label">书籍管理</router-link>
+      <router-link to="/bookList" class="sidebar-label">用户管理</router-link>
+      <router-link to="/profile" class="sidebar-label">个人信息</router-link>
     </div>
   </div>
 </template>

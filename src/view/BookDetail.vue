@@ -18,10 +18,10 @@
               <div class="book-author">{{book.bookAuthor}}</div>
             </div>
             <div class="book-info-right-top-button">
-              <button>加入书架</button>
               <a :href="book.bookContent">
-                <button>开始阅读</button>
+                <button class="button-add">开始阅读</button>
               </a>
+              <button :class="addBookShelfClass" @click="addOrRemoveToShelf">{{addBookShelfText}}</button>
             </div>
           </div>
 
@@ -91,7 +91,7 @@
   flex-direction: column;
   justify-items: center;
 }
-.book-info-right-top-button button{
+.button-add{
   border-radius: 26px;
   text-align: center;
   color: whitesmoke;
@@ -101,10 +101,25 @@
   font-size: large;
   border: none;
 }
-.book-info-right-top-button button:hover{
+.button-add:hover{
   background-color: #0782d2;
   cursor: pointer;
 }
+
+.button-remove{
+  border-radius: 26px;
+  text-align: center;
+  color: whitesmoke;
+  background-color:  #282829;
+  margin-bottom: 1rem;
+  padding: 0.8rem 1.5rem;
+  font-size: large;
+  border: none;
+}
+.button-remove:hover{
+  background-color: #3a3a3b;
+}
+
 .book-detail-text{
   display: flex;
   flex-direction: column;
@@ -139,14 +154,47 @@ import {onMounted, ref} from "vue";
 import request from "@/util/request";
 let book = ref(null)
 const isLoading = ref(true)
+const addedToShelfStatus = ref(false)
+let addBookShelfText = ref('加入书架')
+let addBookShelfClass = ref('button-not-add')
 const toRead = ()=>{book.bookContent}
+const BookId = ref(null)
+const user = JSON.parse(localStorage.getItem('user') || '{}')
+
+const route = useRoute();
+const addOrRemoveToShelf = ()=>{
+  if(!addedToShelfStatus.value){
+    request.post(`add/bookShelf/${BookId.value}/${user.uid}`)
+        .then(res=>{
+          if(res.code === 200){
+            addBookShelfText.value = '移出书架'
+            addBookShelfClass.value = 'button-remove'
+            addedToShelfStatus.value = true
+          }
+        })
+  }else {
+    request.post(`remove/bookShelf/${BookId.value}/${user.uid}`)
+        .then(res=>{
+          if(res.code === 200){
+            addBookShelfText.value = '加入书架'
+            addBookShelfClass.value = 'button-add'
+            addedToShelfStatus.value = false
+          }
+        })
+  }
+}
 onMounted(() =>{
-  const route = useRoute();
-  const BookId = route.params.bookId
-  request.get(`/select/book/${BookId}`)
+  const BId = route.params.bookId
+  BookId.value = BId
+
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+  request.get(`/select/book/${BId}/${user.uid}`)
       .then(res =>{
         if(res.code === 200){
-          book.value = res.data
+          book.value = res.data.book
+          addedToShelfStatus.value = res.data.addedToShelf
+          addBookShelfText.value = addedToShelfStatus.value ? '移出书架' : '加入书架'
+          addBookShelfClass.value = addedToShelfStatus.value ? 'button-remove' : 'button-add'
           isLoading.value = false
 
         }else {

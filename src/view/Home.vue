@@ -2,7 +2,7 @@
   <div class="search-section">
     <h1>回车，找本书看看</h1>
     <div class="search">
-      <input type="text" v-model="searchData" placeholder="输入/书名/作者名">
+      <input type="text" v-model="searchData" placeholder="输入/书名/作者名" >
       <span class="search_logo" @click="getBook" @keyup.enter="keyDown"></span>
     </div>
   </div>
@@ -57,6 +57,7 @@
 
 import BookList from "@/components/BookList.vue";
 import request from "@/util/request";
+import {onMounted, onUnmounted, ref} from "vue";
 const searchData = ref('')
 const currentPage = ref('1')
 const pageSize = 25

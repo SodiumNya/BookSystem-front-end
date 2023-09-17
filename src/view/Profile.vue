@@ -5,7 +5,7 @@
       <div class="public-profile">
         <div class="profile-detail">
           <label for="nickname">昵称</label>
-          <input id="nickname" type="text" v-model="data.nickname">
+          <input id="nickname" type="text" v-model="data.nickname" required="required">
 
           <label for="username" >uid</label>
           <input id="username" type="text" disabled :placeholder="user.uid">
@@ -27,7 +27,7 @@
         <div class="profile-avatar">
           <img :src="user.avatar" alt="头像" class="profile-avatar-picture">
           <label class="avatar-upload" >
-            上传头像
+            暂时不能上传头像
             <input id="avatar-upload" type="file" ref="avatarUpload" @change="handleAvatarChange">
           </label>
         </div>
@@ -142,6 +142,7 @@
   border-radius: 5px;
   color: #fffff3;
   font-weight: bold;
+  pointer-events: none;
 }
 
 .avatar-upload:hover{
@@ -193,16 +194,12 @@ const router = useRouter()
 
 
   const saveBasicInfo = ()=>{
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    }
+
     request.post('/update/basic', {
       uid: user.uid,
       nickname: data.value.nickname,
       describe: data.value.describe,
-    }, config).then(res =>{
+    }).then(res =>{
       if(res.code === 200){
         request.get(`/select/${user.uid}`)
             .then(res =>{
