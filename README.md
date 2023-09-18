@@ -32,7 +32,7 @@
 使用 Git 将项目克隆到本地：
 
 ```bash
-git clone https://github.com/yourusername
+git clone https://github.com/sodiumnya/BookSystem-front-end.git
 ```
 ### yarn
 #### 启动
