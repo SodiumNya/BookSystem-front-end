@@ -3,7 +3,10 @@
 一个简单的在线看书系统，分管理员和用户两个角色使用，用户可以搜书，将书籍加入个人书架，在线阅读，个人信息修改等。管理员可以录入书籍，管理书籍和用户。
 
 ## 注意
-此处为前端部分，后端部分在
+此处为前端部分，后端部分在 
+```sh
+https://github.com/sodiumnya/BookSystem-trailing-end.git
+```
 
 
 ## 项目背景
@@ -32,7 +35,7 @@
 使用 Git 将项目克隆到本地：
 
 ```bash
-git clone https://github.com/yourusername
+git clone https://github.com/sodiumnya/BookSystem-front-end.git
 ```
 ### yarn
 #### 启动
@@ -50,99 +53,23 @@ yarn build
 npm install
 ```
 #### 启动
+```sh
 npm start
+```
 
 ## 贡献
-
-### 项目需要大家的支持，期待更多小伙伴的贡献，你可以：# 项目介绍
-
-
-以下是在本地启动项目的步骤：
-
-
-### 1. 克隆项目
-
-
-使用 Git 将项目克隆到本地：
-
-
-```bash
-
-git clone https://github.com/yourusername
-
-```
-
-### yarn
-
-#### 启动
-
-```sh
-
-yarn start
-
-```
-
-#### 部署
-
-```sh
-
-yarn build
-
-```
-
-
-### npm
-
-#### 依赖安装
-
-```sh
-
-npm install
-
-```
-
-#### 启动
-
-npm start
-
-
-## 贡献
-
 
 ### 项目需要大家的支持，期待更多小伙伴的贡献，你可以：
-
 1. 加入更多有意思的功能
 
 2. 提建议或修复Bug
 
 3. 交流更多有趣的想法和技术
 
-
 ### 欢迎和我有相同想法的小伙伴加入进来，我们共同探讨，共同进步！！！
-
-
 
 ## Contributors ✨
 
 Thanks goes to these wonderful people 
 
 This project follows the all-contributors specification. Contributions of any kind welcome!
-
-
-Releases
-
-No releases published
-
-
-
-1. 加入更多有意思的功能
-2. 提建议或修复Bug
-3. 交流更多有趣的想法和技术
-
-### 欢迎和我有相同想法的小伙伴加入进来，我们共同探讨，共同进步！！！
-
-
-## Contributors ✨
-Thanks goes to these wonderful people 
-This project follows the all-contributors specification. Contributions of any kind welcome!
-
