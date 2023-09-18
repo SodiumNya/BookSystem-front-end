@@ -27,7 +27,7 @@
         <div class="profile-avatar">
           <img :src="user.avatar" alt="头像" class="profile-avatar-picture">
           <label class="avatar-upload" >
-            暂时不能上传头像
+            上传新头像
             <input id="avatar-upload" type="file" ref="avatarUpload" @change="handleAvatarChange">
           </label>
         </div>
@@ -142,7 +142,7 @@
   border-radius: 5px;
   color: #fffff3;
   font-weight: bold;
-  pointer-events: none;
+  //pointer-events: none;
 }
 
 .avatar-upload:hover{
@@ -174,8 +174,27 @@ const router = useRouter()
 
   const handleAvatarChange = ()=>{
     uploadAvatar = avatarUpload.value.files[0]
-    console.log(avatarUpload.value.files[0])
-    console.log(uploadAvatar)
+    const sendData = new FormData;
+    sendData.append('uid', user.uid)
+    sendData.append('avatar', uploadAvatar)
+    let config = {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }
+    request.post('/update/basic/avatar',sendData, config)
+        .then(res => {
+          if(res.code === 200){
+            request.get(`/select/${user.uid}`)
+                .then(res =>{
+                  if(res.code === 200){
+                    localStorage.setItem('user', JSON.stringify(res.data))
+                    window.location.reload()
+                  }
+                })
+          }
+          }
+        )
   }
 
   const saveCoreInfo = ()=> {
@@ -191,6 +210,8 @@ const router = useRouter()
       }
     })
   }
+
+
 
 
   const saveBasicInfo = ()=>{
@@ -211,4 +232,5 @@ const router = useRouter()
       }
     })
   }
+
 </script>

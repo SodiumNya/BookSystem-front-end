@@ -157,7 +157,9 @@ const showCard = ref(false);
 export default {
   setup(){
     const user = JSON.parse(localStorage.getItem('user') || '{}')
-    user.avatar = 'https://avatars.githubusercontent.com/u/112569765?…00&u=5821d799b19c6471af785b40e1c71ba8fe48ca9e&v=4'
+    if(!user.avatar){
+      user.avatar = 'http://localhost:9787/files/download/1695021417059_ddd.webp'
+    }
     return{
       user,
       infoCard

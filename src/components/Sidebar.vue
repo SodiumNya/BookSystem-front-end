@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar-container">
-    <div class="sidebar-content" v-if="user.role === '用户'">
+    <div class="sidebar-content">
       <router-link to="/" class="sidebar-label">系统首页</router-link>
       <router-link to="/bookList" class="sidebar-label">我的书架</router-link>
       <router-link to="/profile" class="sidebar-label">个人信息</router-link>

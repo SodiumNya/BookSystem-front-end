@@ -18,16 +18,12 @@
               <div class="book-author">{{book.bookAuthor}}</div>
             </div>
             <div class="book-info-right-top-button">
-              <a :href="book.bookContent">
-                <button class="button-add">开始阅读</button>
-              </a>
+              <a :href="book.bookContent" class="button-add">开始阅读</a>
               <button :class="addBookShelfClass" @click="addOrRemoveToShelf">{{addBookShelfText}}</button>
             </div>
           </div>
 
-          <div class="book-intro">
-            <p >{{book.bookIntro}}</p>
-          </div>
+          <p class="book-intro">{{book.bookIntro}}</p>
 
         </div>
       </div>
@@ -40,13 +36,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: hidden;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
   background-color: #262628;
   width: 100%;
   height: 100%;
 }
 .book-detail-main-container{
   display: flex;
-  width: 34%;
+  max-width: 50%;
   height: 100%;
   background-color: #1c1c1d;
 }
@@ -67,6 +66,7 @@
   align-items: start;
   //justify-content: center;
   width: 70%;
+  height: 100%;
 }
 .book-info-right-top{
   //max-width:30%;
@@ -79,15 +79,17 @@
   width: 30%;
 }
 .book-cover{
-  max-height: 20%;
-  width: 100%;
+  max-height: 70%;
+  max-width: 90%;
 }
 .book-cover img{
   width: 100%;
+  height: 100%;
 }
 .book-info-right-top-button{
   margin: 1rem 4rem 1rem 1rem;
   display: flex;
+  flex: 1;
   flex-direction: column;
   justify-items: center;
 }
@@ -124,11 +126,14 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  max-width: 70%;
+
 }
 .book-title {
   font-size: xx-large;
   font-family: 宋体, serif;
   margin-bottom: 0.5rem;
+  //max-width: 80%;
 }
 .book-author {
   font-size: x-large;
@@ -138,13 +143,17 @@
   color: #0096fd;
 }
 .book-intro{
-  max-width: 80%;
-  overflow: hidden;
-  overflow-wrap: break-word;
-}
-.book-intro p{
+  overflow : hidden;
   text-overflow: ellipsis;
-  overflow: hidden;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+
+  max-width: 70%;
+  margin-top: 3rem;
+
+
 }
 </style>
 

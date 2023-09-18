@@ -27,9 +27,7 @@
   background-size: 100%;
   background: url("https://weread-1258476243.file.myqcloud.com/web/wrwebnjlogic/image/search_magnifier.3aaf44ac.png") no-repeat;
 }
-.search_logo:hover{
-  background: #312f2f url("https://weread-1258476243.file.myqcloud.com/web/wrwebnjlogic/image/search_magnifier.3aaf44ac.png") no-repeat;
-}
+
 .search{
   display: flex;
   align-items: center;
@@ -38,7 +36,8 @@
   height: 10%;
   width: 40%;
   border-radius: 26px;
-  padding: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   border: 1px solid darkgray;
   outline: none;
 }

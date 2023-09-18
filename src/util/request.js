@@ -6,11 +6,15 @@ const request = axios.create({
     timeout: 5000
 })
 
+
 // request 拦截器
 // 可以自请求发送前对请求做一些处理
 // 比如统一加token，对请求参数统一加密
 request.interceptors.request.use(config => {
-    config.headers['Content-Type'] = 'application/json;charset=utf-8';
+
+    if(!config.headers['Content-Type']) {
+        config.headers['Content-Type'] = 'application/json;charset=utf-8';
+    }
 
     const userJson = JSON.parse(localStorage.getItem('user') || '{}')
     if (userJson) {
@@ -31,8 +35,10 @@ request.interceptors.response.use(
         if (typeof res === 'string') {
             res = res ? JSON.parse(res) : res
         }
-        if (res.code === '401') {
-            router.push('/login')
+        if (res.code === 401) {
+            router.push('/login').then(r => {
+                console.info('登录权限过期,请重新登录')})
+
         }
         return res;
     },

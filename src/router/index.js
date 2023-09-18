@@ -4,28 +4,28 @@ const routes = [
     {
         path: '/',
         name: 'Layout',
-        component: import("@/view/Layout.vue"),
+        component: ()=> import("@/view/Layout.vue"),
         children: [
             {
                 path: '',
                 name: 'Home',
-                component: import("@/view/Home.vue")
+                component: ()=> import("@/view/Home.vue")
             },
             {
                 path: 'bookList',
                 name: 'book list',
-                component: import("@/view/BookShelf.vue"),
+                component: ()=>import("@/view/BookShelf.vue"),
                 meta: {requireAuth: true}
             },
             {
                 path: 'bookDetail/:bookId',
                 name: 'bookDetail',
-                component: import('@/view/BookDetail.vue')
+                component: ()=> import('@/view/BookDetail.vue')
             },
             {
                 path: 'profile',
                 name: 'Profile',
-                component: import("@/view/Profile.vue"),
+                component: ()=> import("@/view/Profile.vue"),
                 meta: {requireAuth: true}
             },
 
@@ -34,12 +34,12 @@ const routes = [
     {
         path: '/login',
         name: 'login',
-        component: import("@/view/Login.vue")
+        component: ()=> import("@/view/Login.vue")
     },
     {
         path: '/register',
         name: 'register',
-        component: import("@/view/Register.vue")
+        component: ()=> import("@/view/Register.vue")
     }
 ];
 
