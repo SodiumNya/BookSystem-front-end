@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="book-sys-container">
     <sidebar/>
     <div class="main-container">
       <navbar/>
@@ -11,7 +11,7 @@
 </template>
 
 <style>
-.container{
+.book-sys-container{
   display: flex;
   height: 100%;
   width: 100%;

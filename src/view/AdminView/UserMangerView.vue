@@ -19,7 +19,7 @@
     </div>
     <div class="user-manger-info">
       <table class="list-user-info">
-        <thead>
+        <thead class="text-center">
         <tr class="list-user-info-thead">
           <th>uid</th>
           <th>账号</th>
@@ -42,12 +42,18 @@
           <td class="list-user-info-td">{{user.describe}}</td>
           <td class="list-user-info-td">{{user.role}}</td>
           <td class="list-user-info-td">
-            <button class="button-edit" @click="editUserInfo(user)">修改信息</button>
+            <button type="button" class="button-edit" data-bs-toggle="modal" data-bs-target="#xxx">修改信息</button>
+            <modal id="xxx"
+                   :modal-id="'xxx'"
+                   :user="JSON.parse(JSON.stringify(user))"
+                   :roles="roles"
+                   @returnData='save'/>
+            <!-- Modal -->
+
           </td>
         </tr>
         </tbody>
       </table>
-
     </div>
   </div>
 </div>
@@ -192,6 +198,7 @@
 <script setup>
   import request from "@/util/request";
   import {onMounted, ref} from "vue";
+  import Modal from "@/components/Modal.vue";
 
   const users = ref(null)
   const roles = ref([])
@@ -201,18 +208,31 @@
   const currentPage = ref(1)
   const pageSize = 10;
   const editUserInfo = (user)=>{
-    request.get(`/select/${user.uid}`)
+    let data = null
+    request.get(`/select/${user.id}`)
         .then(res =>{
           if(res.code === 200){
-            //跳出弹窗
+            data = res.data
           }
         })
+    return data
   }
-  const save = ()=>{
-    request.post('/admin/manage/user/update',{})
+
+  const save = (data)=>{
+    console.log("这里是保存发请求",data)
+    request.post('/admin/manage/user/update',{
+      'uid': data.uid,
+      'username': data.username,
+      'nickname': data.nickname,
+      'password': data.password,
+      'avatar': data.avatar,
+      'describe': data.describe,
+      'role': data.role
+    })
         .then(res =>{
           if(res.code === 200){
             // 消息组件提示修改成功
+            search()
           }
         })
   }

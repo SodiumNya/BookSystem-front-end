@@ -21,7 +21,7 @@
 .search_logo{
   content: "";
   top: 16px;
-  left: 20px;
+  margin-right: 1rem;
   width: 20px;
   height: 100%;
   background-size: 100%;
@@ -31,9 +31,10 @@
 .search{
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin-top: 5px;
   margin-right: 5px;
-  height: 10%;
+  height: 20%;
   width: 40%;
   border-radius: 26px;
   padding-top: 10px;

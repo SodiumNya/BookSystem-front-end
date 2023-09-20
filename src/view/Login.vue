@@ -127,6 +127,7 @@ a:hover{
 import validCode from "@/components/ValidCode.vue";
 import {ref} from "vue";
 import request from "@/util/request";
+
 export default {
   components: {
     validCode
@@ -162,7 +163,12 @@ export default {
       }).then(res =>{
         if(res.code ===  200){
           localStorage.setItem('user',JSON.stringify(res.data))
+          this.$toast.success(`欢迎回来, ${res.data.nickname}`, {position: 'top', duration: 1500});
+
           this.$router.push('/')
+
+        }else {
+          this.$toast.warning(res.message,{position: 'top'});
         }
       })
 

@@ -156,6 +156,10 @@ import request from "@/util/request";
 import {useRouter} from "vue-router";
 import {ref} from "vue";
 
+import { getCurrentInstance } from 'vue'
+const instance = getCurrentInstance()
+const _this= instance.appContext.config.globalProperties
+
 const router = useRouter()
   const user = JSON.parse(localStorage.getItem('user' || '{}'))
 
@@ -169,7 +173,6 @@ const router = useRouter()
 
   let uploadAvatar = user.avatar
   const avatarUpload = ref(null)
-
   const handleAvatarChange = ()=>{
     uploadAvatar = avatarUpload.value.files[0]
     const sendData = new FormData;
@@ -187,9 +190,15 @@ const router = useRouter()
                 .then(res =>{
                   if(res.code === 200){
                     localStorage.setItem('user', JSON.stringify(res.data))
-                    window.location.reload()
+                    setTimeout(()=>{
+                      window.location.reload()
+
+                    }, 1000)
                   }
                 })
+            _this.$toast.success('修改成功', {position: 'top', duration: 1500});
+
+
           }
           }
         )
@@ -203,8 +212,11 @@ const router = useRouter()
       password: data.value.password
     }).then(res =>{
       if(res.code === 200){
+        _this.$toast.success('修改成功', {position: 'top', duration: 1500});
+
         localStorage.removeItem('user')
         router.push('/login')
+
       }
     })
   }
@@ -220,11 +232,15 @@ const router = useRouter()
       describe: data.value.describe,
     }).then(res =>{
       if(res.code === 200){
+        _this.$toast.success('修改成功', {position: 'top', duration: 1500});
+
         request.get(`/select/${user.uid}`)
             .then(res =>{
               if(res.code === 200){
                 localStorage.setItem('user', JSON.stringify(res.data))
-                window.location.reload()
+                setTimeout(()=>{
+                  window.location.reload()
+                }, 1000)
               }
             })
       }
