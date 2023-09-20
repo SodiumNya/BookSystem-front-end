@@ -130,9 +130,7 @@
   width: 25%;
 }
 .profile-save:hover{
-
   background: #289845;
-
 }
 .avatar-upload{
   margin-top: 1rem;

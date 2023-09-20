@@ -14,6 +14,7 @@
 .container{
   display: flex;
   height: 100%;
+  width: 100%;
 }
 .main-container{
   display: flex;
@@ -27,6 +28,7 @@
   margin: 1rem;
   background: white;
   height: 100%;
+  width: 100%;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
