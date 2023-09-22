@@ -18,6 +18,24 @@ const getDefaultAvatar = ()=>{
         }
       })
 }
+
+const userAvatarUpload = ref(null)
+const handleUserAvatarChange = ()=>{
+  props.user.avatar = userAvatarUpload.value.files[0]
+  const sendData = new FormData;
+  sendData.append('file', props.user.avatar)
+  let config = {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  }
+  request.post('/files/upload',sendData, config)
+      .then(res => {
+        if(res.code === 200){
+          props.user.avatar = res.data
+        }
+      })
+}
 </script>
 
 <template>
@@ -26,7 +44,7 @@ const getDefaultAvatar = ()=>{
     <div class="modal-dialog modal-dialog-centered modal-xl">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+          <h5 class="modal-title" id="staticBackdropLabel">修改信息</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -60,15 +78,17 @@ const getDefaultAvatar = ()=>{
                             <option v-for="role in roles">{{role}}</option>
                           </select>
                         </td>
-                        <td>
+                        <td class="w-25">
                           <img :src="user.avatar" alt="用户头像" class="img-fluid w-25 rounded">
-                          <button class="btn btn-success ms-3" @click="getDefaultAvatar">重置头像</button>
+                          <label class="btn btn-success ms-3" >
+                            上传新头像
+                            <input id="bookCover-upload" type="file" ref="userAvatarUpload" style="display: none" @change="handleUserAvatarChange">
+                          </label>
                         </td>
                       </tr>
                       </tbody>
                     </table>
         </div>
-
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
           <button type="button" class="btn btn-primary" @click="save" data-bs-dismiss="modal">保存修改</button>

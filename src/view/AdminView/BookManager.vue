@@ -1,43 +1,74 @@
 
 <template>
   <div class="user-manger-container">
-    <h2 class="user-manger-title">图书管理</h2>
+    <h2 class="user-manger-title fs-4 fw-bold p-3">图书管理</h2>
     <div class="user-manger-main-content">
       <div class="user-select">
         <div class="user-select-user-search">
           <input type="search" v-model="searchInput" placeholder="输入/书名/作者名进行检索">
         </div>
-        <input class="submit" type="submit" value="查询" @click="search">
+        <input class="submit" type="submit" value="查询" @click="searchBook">
       </div>
       <div class="user-manger-info">
-        <table class="list-user-info">
-          <thead>
-          <tr class="list-user-info-thead">
-            <th>bookID</th>
-            <th>书名</th>
-            <th>作者名</th>
-            <th>封面</th>
-            <th>内容</th>
-            <th>书籍简介</th>
+        <table class="table align-middle mt-lg-5 w-100">
+          <thead class="text-center">
+          <tr class="border border-dark">
+            <th class="border border-dark">bookID</th>
+            <th class="border border-dark">书名</th>
+            <th class="border border-dark">作者名</th>
+            <th class="border border-dark">封面</th>
+            <th class="border border-dark">内容</th>
+            <th class="border border-dark">书籍简介</th>
           </tr>
           </thead>
-          <tbody class="list-user-info-tbody">
-          <tr class="list-user-info-tr" v-for="user in users">
-            <td class="list-user-info-td">{{user.uid}}</td>
-            <td class="list-user-info-td">{{user.username}}</td>
-            <td class="list-user-info-td">{{user.password}}</td>
-            <td class="list-user-info-td">{{user.nickname}}</td>
-            <td class="list-user-info-td">
-              <img :src="user.avatar" alt="用户头像" class="list-user-info-img">
+          <tbody class="list-user-info-tbody border border-dark" >
+          <tr class="list-user-info-tr" v-for="book in books">
+            <td class="border border-dark">{{book.bookId}}</td>
+            <td class="border border-dark">{{book.bookTitle}}</td>
+            <td class="border border-dark">{{book.bookAuthor}}</td>
+            <td class="border border-dark"><img :src="book.bookCover" alt="书籍封面" class="img-fluid w-25 h-auto"></td>
+            <td class="border border-dark overflow-hidden w-25" >{{book.bookContent}}</td>
+            <td class="border border-dark overflow-scroll w-25">{{book.bookIntro}}</td>
+            <td>
+              <button type="button" class="btn btn-success" data-bs-toggle= "modal" data-bs-target="#bookModal" @click="handleEditBook(book)">修改</button>
             </td>
-            <td class="list-user-info-td">{{user.describe}}</td>
-            <td class="list-user-info-td">{{user.role}}</td>
-            <td class="list-user-info-td">
-              <button class="button-edit" @click="editUserInfo(user)">修改信息</button>
+            <td class="border border-dark">
+              <button type="button" class="btn btn-danger" data-bs-toggle= "modal" data-bs-target="#confirm" @click="handleEditBook(book)">删除</button>
             </td>
           </tr>
+          <book-modal :modal-id="'bookModal'"
+                      :book= editBook
+                      @returnData="updateBook"/>
+          <confirm-modal  :title="'删除'"
+                         :context="'删除图书可能会发生不得了的事情, 你考虑好了吗'"
+                         @returnData="deleteBook"/>
           </tbody>
         </table>
+        <nav aria-label="Page navigation example" class="mt-3">
+          <ul class="pagination">
+            <li class="page-item" >
+              <a class="page-link" href="#" @click="toFirstPage" >
+                第一页
+              </a>
+            </li>
+
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Previous" @click="toFrontPage">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+
+            <li class="page-item"><a class="page-link" href="#">{{currentPage}}</a></li>
+
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Next" @click="toNextPage">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+
+            <li class="page-item"><a class="page-link" href="#" @click="toLastPage">最后一页</a></li>
+          </ul>
+        </nav>
 
       </div>
     </div>
@@ -72,17 +103,7 @@
   flex-direction: column;
   align-items: center;
 }
-.list-user-info{
-  justify-content: center;
-  margin-top: 3rem;
-  width: 80%;
-  min-width: 480px;
-  border: 1px solid;
-  border-collapse: collapse;
-}
-.list-user-info-thead{
-  font-weight: bold;
-}
+
 .list-user-info-thead th{
   border: 1px solid;
 }
@@ -94,21 +115,11 @@
 .list-user-info-tr{
   line-height: 1;
 }
-.list-user-info-td{
-  height: 48px;
-  width: auto;
-  border: 1px solid;
-}
-.list-user-info-label{
 
-}
 .list-user-info-label input{
   display: none;
 }
-.list-user-info-img{
-  max-height: 100%;
-  width: auto;
-}
+
 .user-select{
   display: flex;
   align-items: baseline;
@@ -116,9 +127,7 @@
   border-bottom: 1px solid #dad8d8;
 
 }
-.user-select-user-role{
-  margin: 1rem;
-}
+
 .user-select-user-role select{
   padding: 0.5rem;
   margin-left: 5px;
@@ -184,47 +193,95 @@
 import request from "@/util/request";
 import {onMounted, ref} from "vue";
 
-const users = ref(null)
-const roles = ref([])
-const selectedRole = ref('any')
-const searchInput = ref(null)
-const isLoading = ref(true)
+import { getCurrentInstance } from 'vue'
+import BookModal from "@/components/BookModal.vue";
+import ConfirmModal from "@/components/ConfirmModal.vue";
+const instance = getCurrentInstance()
+const _this= instance.appContext.config.globalProperties
+
 const currentPage = ref(1)
 const pageSize = 10;
-const editUserInfo = (user)=>{
-  request.get(`/select/${user.uid}`)
-      .then(res =>{
-        if(res.code === 200){
-          //跳出弹窗
-        }
-      })
+const total = ref(1)
+const countLastPage = () =>{
+  return Math.ceil(total.value / pageSize)
 }
-const save = ()=>{
-  request.post('/admin/manage/user/update',{})
-      .then(res =>{
-        if(res.code === 200){
-          // 消息组件提示修改成功
-        }
-      })
+
+let lastPage = countLastPage()
+
+const toFirstPage = () => {
+  currentPage.value = 1;
+  searchBook()
 }
-const search = () =>{
-  if((selectedRole.value === 'any') && !searchInput.value){
+const toLastPage = () => {
+  currentPage.value = lastPage;
+  searchBook()
+
+}
+const toFrontPage = () =>{
+  if(currentPage.value !== 1){
+    currentPage.value--
+    searchBook()
+
+  }
+}
+const toNextPage = () =>{
+  if(currentPage.value !== Math.ceil(total.value/pageSize)){
+    currentPage.value++;
+    searchBook()
+
+  }
+}
+
+const books = ref(null)
+
+const searchInput = ref(null)
+
+const editBook = ref({})
+const load = ref(false)
+const handleEditBook  = (book) => {
+  load.value = true
+  editBook.value = JSON.parse(JSON.stringify(book))
+}
+const searchBook = () =>{
+  if(!searchInput) {
     return
   }
-  request.get(`/admin/user/get/all/${selectedRole.value}/${searchInput.value}/${currentPage.value}/${pageSize}`)
+  request.get(`/select/bookList/${searchInput.value}/${currentPage.value}/${pageSize}`)
       .then(res =>{
-        if(res.code === 200 || res.code === 233){
-          users.value = res.data
-          isLoading.value = false
+        if(res.code === 200){
+          books.value = res.data.flat()
+          currentPage.value = res.currentPage
+          total.value = res.total
+
+        }else {
+          _this.$toast.waring(res.data, {position: 'top'})
         }
       })
 }
-onMounted(()=>{
-  request.get('/get/role')
-      .then(res =>{
+const updateBook = (data)=>{
+  request.post('/update/book', {
+    bookId: data.bookId,
+    bookTitle: data.bookTitle,
+    bookAuthor: data.bookAuthor,
+    bookCover: data.bookCover,
+    bookContent: data.bookContent,
+    bookIntro: data.bookIntro
+  }).then(res => {
+    if(res.code === 200){
+      searchBook()
+      _this.$toast.sucess('修改成功！', {position: 'top'})
+    }
+  })
+}
+
+const deleteBook = (bookId)=>{
+
+  request.delete(`/delete/book/${editBook.value.bookId}`)
+      .then(res=>{
         if(res.code === 200){
-          roles.value = res.data
+          searchBook()
+          _this.$toast.success('删除成功！', {position: 'top'})
         }
       })
-})
+}
 </script>

@@ -71,7 +71,7 @@ const keyDown = (e)=>{
 }
 const getBook = ()=>{
   // alert(searchData.value)
-  request.post(`/select/bookList/${searchData.value}/${currentPage.value}/${pageSize}`)
+  request.get(`/select/bookList/${searchData.value}/${currentPage.value}/${pageSize}`)
       .then(res => {
         if(res.code === 200){
           bookData.value = res.data;

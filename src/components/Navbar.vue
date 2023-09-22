@@ -2,7 +2,7 @@
 
   <div class="navbar-container">
     <div>
-      <h3 class="title">图书系统</h3>
+      <h4 class="fs-5 fw-bold p-3" >图书系统</h4>
     </div>
 
     <div class="user-info">
@@ -11,12 +11,12 @@
       <img class="user-logo" :src="user.avatar" alt="用户头像" @mouseenter="showCard" @mouseleave="hideCard">
 
 
-      <div class="dropdown" ref="infoCard">
+      <div class="user-info-card" ref="infoCard">
         <div class="uid">
           uid：<div>{{user.uid}}</div>
         </div>
         <div class="user-detail">
-          <div class="row">
+          <div class="user-row">
             <div class="user-detail-label">
               昵称:<div class="user-data">{{user.nickname}}</div>
             </div>
@@ -27,7 +27,7 @@
 
           </div>
 
-          <div class="row">
+          <div class="user-row">
             <div class="user-detail-label">
               用户名:<div class="user-data">{{user.username}}</div>
             </div>
@@ -89,7 +89,7 @@
 
 
 
-.dropdown{
+.user-info-card{
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
   display: none;
   color: #7f7f7f;
@@ -109,12 +109,13 @@
   flex-direction: column;
   margin: 0.5rem;
 }
-.user-detail .row{
+.user-detail .user-row{
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.5rem;
+
 }
-.row div{
+.user-row div{
   margin: 0 0.5rem 0 0.5rem;
 }
 

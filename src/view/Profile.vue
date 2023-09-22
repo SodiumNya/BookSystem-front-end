@@ -1,7 +1,7 @@
 <template>
   <div class="profile-container">
     <div class="profile-content">
-      <h2 class="profile-title">修改基本信息</h2>
+      <h2 class="profile-title fs-4 fw-bold">修改基本信息</h2>
       <div class="public-profile">
         <div class="profile-detail">
           <label for="nickname">昵称</label>
@@ -25,7 +25,7 @@
 
 
         <div class="profile-avatar">
-          <img :src="user.avatar" alt="头像" class="profile-avatar-picture">
+          <img :src="data.avatar" alt="头像" class="profile-avatar-picture">
           <label class="avatar-upload" >
             上传新头像
             <input id="avatar-upload" type="file" ref="avatarUpload" @change="handleAvatarChange">
@@ -37,7 +37,7 @@
     </div>
 
     <div class="profile-content">
-      <h2 class="profile-title">修改重要信息</h2>
+      <h2 class="profile-title fs-4 fw-bold">修改重要信息</h2>
       <div class="public-profile">
         <div class="profile-detail">
           <label for="username" >用户名</label>
@@ -161,7 +161,7 @@ const instance = getCurrentInstance()
 const _this= instance.appContext.config.globalProperties
 
 const router = useRouter()
-  const user = JSON.parse(localStorage.getItem('user' || '{}'))
+  let user = JSON.parse(localStorage.getItem('user' || '{}'))
 
   let data = ref({
     nickname: user.nickname,
@@ -176,32 +176,18 @@ const router = useRouter()
   const handleAvatarChange = ()=>{
     uploadAvatar = avatarUpload.value.files[0]
     const sendData = new FormData;
-    sendData.append('uid', user.uid)
-    sendData.append('avatar', uploadAvatar)
+    sendData.append('file', uploadAvatar)
     let config = {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     }
-    request.post('/update/basic/avatar',sendData, config)
+    request.post('/files/upload',sendData, config)
         .then(res => {
           if(res.code === 200){
-            request.get(`/select/${user.uid}`)
-                .then(res =>{
-                  if(res.code === 200){
-                    localStorage.setItem('user', JSON.stringify(res.data))
-                    setTimeout(()=>{
-                      window.location.reload()
-
-                    }, 1000)
-                  }
-                })
-            _this.$toast.success('修改成功', {position: 'top', duration: 1500});
-
-
+            data.value.avatar = res.data
           }
-          }
-        )
+        })
   }
 
   const saveCoreInfo = ()=> {
@@ -225,11 +211,11 @@ const router = useRouter()
 
 
   const saveBasicInfo = ()=>{
-
     request.post('/update/basic', {
       uid: user.uid,
       nickname: data.value.nickname,
       describe: data.value.describe,
+      avatar: data.value.avatar
     }).then(res =>{
       if(res.code === 200){
         _this.$toast.success('修改成功', {position: 'top', duration: 1500});

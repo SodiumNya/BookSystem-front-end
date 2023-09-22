@@ -1,7 +1,9 @@
+<script >
 
+</script>
 <template>
 <div class="user-manger-container">
-  <h2 class="user-manger-title">用户管理</h2>
+  <h2 class="user-manger-title fs-4 fw-bold p-3">用户管理</h2>
 <!--  <h1 v-if="isLoading.value">加载中</h1>-->
   <div class="user-manger-main-content">
     <div class="user-select">
@@ -42,24 +44,55 @@
           <td class="list-user-info-td">{{user.describe}}</td>
           <td class="list-user-info-td">{{user.role}}</td>
           <td class="list-user-info-td">
-            <button type="button" class="button-edit" data-bs-toggle="modal" data-bs-target="#xxx">修改信息</button>
-            <modal id="xxx"
-                   :modal-id="'xxx'"
-                   :user="JSON.parse(JSON.stringify(user))"
-                   :roles="roles"
-                   @returnData='save'/>
-            <!-- Modal -->
-
+            <button type="button" class="button-edit" data-bs-toggle="modal" data-bs-target="#xxx" @click="handleCurrentUser(user)">修改信息</button>
+          </td>
+          <td class="list-user-info-td">
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirm" @click="handleCurrentUser(user)">删除用户</button>
           </td>
         </tr>
+        <modal id="xxx"
+               :modal-id="'xxx'"
+               :user=currentUser
+               :roles="roles"
+               @returnData='save' />
         </tbody>
+        <confirm-modal :title="'删除'"
+                       :context="'删除用户会发生不得了的事情, 你考虑好了吗'"
+                       @returnData="deleteUser"/>
       </table>
+
+      <nav aria-label="Page navigation example" class="mt-3">
+          <ul class="pagination">
+            <li class="page-item" >
+              <a class="page-link" href="#" @click="toFirstPage" >
+                第一页
+              </a>
+            </li>
+
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Previous" @click="toFrontPage">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+
+            <li class="page-item"><a class="page-link" href="#">{{currentPage}}</a></li>
+
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Next" @click="toNextPage">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+
+            <li class="page-item"><a class="page-link" href="#" @click="toLastPage">最后一页</a></li>
+          </ul>
+        </nav>
     </div>
   </div>
 </div>
 </template>
 
 <style scoped>
+
 .user-manger-container{
   display: flex;
   flex-direction: column;
@@ -200,13 +233,57 @@
   import {onMounted, ref} from "vue";
   import Modal from "@/components/Modal.vue";
 
+  import { getCurrentInstance } from 'vue'
+  import ConfirmModal from "@/components/ConfirmModal.vue";
+
+  const currentUser = ref({})
+  const instance = getCurrentInstance()
+  const _this= instance.appContext.config.globalProperties
+
   const users = ref(null)
   const roles = ref([])
   const selectedRole = ref('any')
   const searchInput = ref(null)
   const isLoading = ref(true)
+
   const currentPage = ref(1)
-  const pageSize = 10;
+  const pageSize = 1;
+  const total = ref(1)
+
+  const countLastPage = () =>{
+    return Math.ceil(total.value / pageSize)
+  }
+
+  let lastPage = countLastPage()
+
+  const toFirstPage = () => {
+    currentPage.value = 1;
+    search()
+  }
+  const toLastPage = () => {
+    currentPage.value = lastPage;
+    search()
+
+  }
+  const toFrontPage = () =>{
+    if(currentPage.value !== 1){
+      currentPage.value--
+      search()
+
+    }
+  }
+  const toNextPage = () =>{
+    if(currentPage.value !== Math.ceil(total.value/pageSize)){
+      currentPage.value++;
+      search()
+
+    }
+  }
+
+
+  const handleCurrentUser = (user) =>{
+    currentUser.value = JSON.parse(JSON.stringify(user))
+  }
   const editUserInfo = (user)=>{
     let data = null
     request.get(`/select/${user.id}`)
@@ -233,6 +310,8 @@
           if(res.code === 200){
             // 消息组件提示修改成功
             search()
+            _this.$toast.success("修改成功", {position: 'top'})
+
           }
         })
   }
@@ -245,9 +324,23 @@
           if(res.code === 200 || res.code === 233){
             users.value = res.data
             isLoading.value = false
+            currentPage.value = res.currentPage
+            total.value = res.total
+            lastPage = countLastPage()
           }
         })
   }
+
+  const deleteUser = () => {
+    request.delete(`/delete/user/${currentUser.value.uid}`)
+        .then(res => {
+          if(res.code === 200){
+            search();
+            _this.$toast.success('删除成功', {position: 'top'})
+          }
+        })
+  }
+
   onMounted(()=>{
     request.get('/get/role')
         .then(res =>{
