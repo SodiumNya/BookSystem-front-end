@@ -1,8 +1,9 @@
 <template>
 
   <div class="navbar-container">
-    <div>
-      <h4 class="fs-5 fw-bold p-3" >图书系统</h4>
+    <div class="d-flex p-3">
+      <img :src="logo" alt="logo" class="img-fluid ms-2" style="width: 10%;">
+      <h4 class="fs-5 fw-bold pt-2" >图书系统</h4>
     </div>
 
     <div class="user-info">
@@ -152,7 +153,7 @@
 </style>
 <script>
 import {ref} from "vue";
-
+import logo from "@/assets/logo-black.svg";
 const infoCard = ref(null);
 const showCard = ref(false);
 export default {
@@ -163,7 +164,8 @@ export default {
     }
     return{
       user,
-      infoCard
+      infoCard,
+      logo
     }
   },
   methods:{

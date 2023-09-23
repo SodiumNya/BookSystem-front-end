@@ -43,9 +43,33 @@ const routes = [
                 }
             },
             {
+                path: 'admin/addUser',
+                name: 'addUser',
+                component: () => import("@/view/AdminView/AddUser.vue"),
+                beforeEach(to, from, next){
+                    const user = JSON.parse(localStorage.getItem('user') || '{}')
+                    if(!checkAdminAuthentication){
+                        next('/login')
+                    }
+                    next();
+                }
+            },
+            {
                 path: 'admin/BookManger',
                 name: 'BookManger',
                 component: ()=> import('@/view/AdminView/BookManager.vue'),
+                beforeEach(to, from, next){
+                    const user = JSON.parse(localStorage.getItem('user') || '{}')
+                    if(!checkAdminAuthentication){
+                        next('/login')
+                    }
+                    next();
+                }
+            },
+            {
+                path: 'admin/addBook',
+                name: 'AddBook',
+                component: () => import('@/view/AdminView/AddBook.vue'),
                 beforeEach(to, from, next){
                     const user = JSON.parse(localStorage.getItem('user') || '{}')
                     if(!checkAdminAuthentication){
