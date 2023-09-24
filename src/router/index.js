@@ -37,7 +37,7 @@ const routes = [
                 beforeEach(to, from, next){
                     const user = JSON.parse(localStorage.getItem('user') || '{}')
                     if(!checkAdminAuthentication){
-                        next('/login')
+                        next('/forbidden')
                     }
                     next();
                 }
@@ -49,7 +49,7 @@ const routes = [
                 beforeEach(to, from, next){
                     const user = JSON.parse(localStorage.getItem('user') || '{}')
                     if(!checkAdminAuthentication){
-                        next('/login')
+                        next('/forbidden')
                     }
                     next();
                 }
@@ -61,7 +61,7 @@ const routes = [
                 beforeEach(to, from, next){
                     const user = JSON.parse(localStorage.getItem('user') || '{}')
                     if(!checkAdminAuthentication){
-                        next('/login')
+                        next('/forbidden')
                     }
                     next();
                 }
@@ -73,12 +73,11 @@ const routes = [
                 beforeEach(to, from, next){
                     const user = JSON.parse(localStorage.getItem('user') || '{}')
                     if(!checkAdminAuthentication){
-                        next('/login')
+                        next('/forbidden')
                     }
                     next();
                 }
             },
-
         ]
     },
     {
@@ -91,6 +90,19 @@ const routes = [
         name: 'register',
         component: ()=> import("@/view/Register.vue")
     },
+    {
+        path: '/update/passWord',
+        component: () => import('@/view/UpdatePassWord.vue')
+    },
+    {
+        path: '/notFound',
+        component: () => import('@/view/404.vue')
+    },
+    {
+        path: '/forbidden',
+        name: 'forbidden',
+        component: () =>{import('@/view/Forbidden.vue')}
+    }
 
 ];
 
@@ -102,9 +114,11 @@ const router = createRouter({
 router.beforeEach((to, from, next)=>{
     if(to.meta.requireAuth){
         if(!checkAdminToken()){
-            next('/login')
+            next('/forbidden')
         }
-        next();
+        else {
+            next();
+        }
     }else {
         next();
     }

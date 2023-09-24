@@ -76,8 +76,12 @@ a:hover{
 }
 </style>
 <script setup>
-import {ref} from "vue";
+import {getCurrentInstance, ref} from "vue";
 import request from "@/util/request";
+import {useRouter} from "vue-router";
+const router = useRouter()
+const instance = getCurrentInstance()
+const _this= instance.appContext.config.globalProperties
 let usernameErr= ref(false)
 let passwordErr= ref(false)
 
@@ -96,6 +100,14 @@ let passwordErr= ref(false)
         username: user.username,
         password: user.password,
         role: user.role
+      }).then(res => {
+        if(res.code === 200){
+          _this.$toast.success('注册成功', {position: 'top'})
+          router.push('/login')
+        }else {
+          _this.$toast.warning(res.message, {position: 'top'})
+
+        }
       })
     }
   }

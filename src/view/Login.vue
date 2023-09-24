@@ -1,7 +1,7 @@
 <template>
   <div id="login">
     <div class="login-container">
-      <h1 class="login-title">登录</h1>
+      <h1 class="login-title mt-3 fw-bold">登录</h1>
       <div class="input-container">
         <input v-model=verifyUser.username class="input" placeholder="邮箱/uid">
         <span class="errMessage" v-if=usernameErr>用户名格式不正确</span>
@@ -14,7 +14,7 @@
 
       <div class="input-container">
         <div class="code">
-          <input v-model=validCode class="code-input" placeholder="输入验证码">
+          <input v-model=validCode class="code-input" placeholder="验证码">
           <valid-code ref="captchaRef" />
         </div>
         <span class="errMessage" v-if="captchaErr">验证码不正确</span>
@@ -24,11 +24,10 @@
       <button class="login-button" @click="login">登录</button>
       <div class="bottom">
         <router-link to="/register"><span>没有账号？</span>去注册</router-link>
-        <router-link to="#">修改密码</router-link>
+        <router-link to="/update/passWord">修改密码</router-link>
       </div>
     </div>
   </div>
-
 </template>
 
 <style>
@@ -52,7 +51,6 @@
 }
 .login-title{
   color: #41b9d3;
-  font-weight: bold;
   letter-spacing: 1rem;
 }
 .input{

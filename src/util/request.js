@@ -38,7 +38,9 @@ request.interceptors.response.use(
         if (res.code === 401) {
             router.push('/login').then(r => {
                 console.info('登录权限过期,请重新登录')})
-
+        }
+        if(res.code === 404) {
+            router.push('/404').then()
         }
         return res;
     },
