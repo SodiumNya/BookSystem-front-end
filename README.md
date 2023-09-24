@@ -15,7 +15,7 @@ https://github.com/sodiumnya/BookSystem-trailing-end.git
 
 ## 技术栈
 ### 前端
-- 开发框架 vue3
+- 开发框架 vue3, bootstrap5
 - 主语言 JavaScript
 - 页面设计 HTML+css
 
